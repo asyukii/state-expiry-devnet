@@ -23,6 +23,9 @@
     "gasLimit": "800000000",
     "extradata": "{{extraData}}",
     "alloc": {
+      "D8C0Aa483406A1891E5e03B21F2bc01379fc3b20": {
+        "balance": "0x19d971e4fe8401e74000000"
+      },
       {% for v in initHolders %}
       "{{ v.address.replace('0x', '') }}": {
         "balance": "0x{{ v.balance }}"

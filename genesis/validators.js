@@ -5,13 +5,13 @@ const RLP = require('rlp');
 const validators = [
   
    {
-     "consensusAddr": "0x0958dE5eE71B51f883cFCb8860866f7298c336B2",
+     "consensusAddr": "0xC95b7a10ED53C3efe6Ce03e2A35527Bae0c1A3Cf",
    },
    {
-     "consensusAddr": "0xDa7240C984ECB157999eEFef066b317dFD5bafFB",
+     "consensusAddr": "0x2932eCBE405256d9C3913760b02206444CD3A7B0",
    },
    {
-     "consensusAddr": "0x9F8FAAebf4B467488c9Ab2c703e5FA72f1037DFd",
+     "consensusAddr": "0xFD82F4dF7C5624Cf2F5F4692506013682a16BaBC",
    },
 ];
 

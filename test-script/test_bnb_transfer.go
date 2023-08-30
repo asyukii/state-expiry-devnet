@@ -19,7 +19,7 @@ import (
 )
 
 var edpoint = "http://localhost:8502"
-var chainId = big.NewInt(714)
+var chainId = big.NewInt(123454321)
 
 func sendEther(client *ethclient.Client, key *ecdsa.PrivateKey, toAddr common.Address, value *big.Int, nonce uint64) (common.Hash, error) {
 	gasLimit := uint64(3e4)
@@ -40,7 +40,7 @@ func sendEther(client *ethclient.Client, key *ecdsa.PrivateKey, toAddr common.Ad
 
 func main() {
 	senderPrvKey := utils.ParsePrivateKey("190e410a96c56dcc7cbe6ee04ce68fbcf2eb7d86c441e840235373078cf6bb0c")
-	senderAddr := crypto.PubkeyToAddress(senderPrvKey.PublicKey)
+	senderAddr := crypto.PubkeyToAddress(senderPrvKey.PublicKey) // 0xD8C0Aa483406A1891E5e03B21F2bc01379fc3b20
 
 	receiverAddr := common.HexToAddress("0x169eD8eD04D45b572dbCF7354f680D7557253345")
 	c, _ := ethclient.Dial(edpoint)
