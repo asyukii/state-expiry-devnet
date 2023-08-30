@@ -1,0 +1,34 @@
+const web3 = require("web3")
+const RLP = require('rlp');
+
+// Configure
+const validators = [
+  {% for v in validators %}
+   {
+     "consensusAddr": "{{ v.consensusAddr }}",
+   },{% endfor %}
+];
+
+// ===============  Do not edit below ====
+function generateExtradata(validators) {
+  let extraVanity =Buffer.alloc(32);
+  let validatorsBytes = extraDataSerialize(validators);
+  let extraSeal =Buffer.alloc(65);
+  return Buffer.concat([extraVanity,validatorsBytes,extraSeal]);
+}
+
+function extraDataSerialize(validators) {
+  let n = validators.length;
+  let arr = [];
+  for (let i = 0;i<n;i++) {
+    let validator = validators[i];
+    arr.push(Buffer.from(web3.utils.hexToBytes(validator.consensusAddr)));
+  }
+  return Buffer.concat(arr);
+}
+
+extraValidatorBytes = generateExtradata(validators);
+
+exports = module.exports = {
+  extraValidatorBytes: extraValidatorBytes,
+}
