@@ -118,6 +118,7 @@ function startFullNodeWithExpiry() {
     num=$1
     nodeNum=$2
     bootnode=$3
+    remote=$4
     for((i=1;i<=$num;i++)); do
         validatorIndex=$(($nodeNum-1))
         nohup ${workspace}/bin/geth -unlock ${validatorAddr[$validatorIndex]} --http --http.port "$((8501+$nodeNum))" --ws.port "$((8545+$nodeNum))" \
@@ -126,9 +127,10 @@ function startFullNodeWithExpiry() {
          --port "$((30305+$nodeNum))" --authrpc.port "$((8550+$nodeNum))" --password "${workspace}/clusterNode/password.txt" \
          --mine --miner.etherbase ${validatorAddr[$validatorIndex]} --rpc.allow-unprotected-txs --allow-insecure-unlock --light.serve 50 \
          --gcmode full --ws --datadir ${workspace}/clusterNode/node${nodeNum} \
-         --metrics --pprof --pprof.port "$((6060+$nodeNum))" --http.corsdomain "*" > ${workspace}/clusterNode/node${nodeNum}/geth.log 2>&1 &
+         --metrics --pprof --pprof.port "$((6060+$nodeNum))" --http.corsdomain "*" --rpc.txfeecap 0 \
+         --state-expiry --state-expiry.remote ${remote} > ${workspace}/clusterNode/node${nodeNum}/geth.log 2>&1 &
 
-        echo "start validator $nodeNum as full node"
+        echo "start validator $nodeNum as full node, enable state expiry feature"
         nodeNum=$(($nodeNum+1))
 
         sleep 1
@@ -146,7 +148,7 @@ function startFullNodeNoExpiry() {
          --syncmode "full" --config ${workspace}/clusterNode/node${nodeNum}/config.toml \
          --port "$((30305+$nodeNum))" --authrpc.port "$((8550+$nodeNum))" --password "${workspace}/clusterNode/password.txt" \
          --mine --miner.etherbase ${validatorAddr[$validatorIndex]} --rpc.allow-unprotected-txs --allow-insecure-unlock --light.serve 50 \
-         --gcmode full --ws --datadir ${workspace}/clusterNode/node${nodeNum} \
+         --gcmode full --ws --datadir ${workspace}/clusterNode/node${nodeNum} --rpc.txfeecap 0 \
          --metrics --pprof --pprof.port "$((6060+$nodeNum))" --http.corsdomain "*" > ${workspace}/clusterNode/node${nodeNum}/geth.log 2>&1 &
 
         echo "start validator $nodeNum as full node"
@@ -163,11 +165,11 @@ start)
     exit_previous
     fullNumWithExpiry=2
     if [ ! -z $3 ] && [ "$3" -gt "0" ]; then
-      fullNum=$3
+      fullNumWithExpiry=$3
     fi
     fullNumNoExpiry=1
     if [ ! -z $4 ] && [ "$4" -gt "0" ]; then
-      archiveNum=$4
+      fullNumNoExpiry=$4
     fi
     validatorNum=fullNumWithExpiry+fullNumNoExpiry
     echo "===== generate node key ===="
@@ -180,8 +182,9 @@ start)
     echo "===== starting bootnode ===="
     bootnode=$(start_bootnode)
     echo "===== starting client ===="
-    startFullNodeNoExpiry fullNumNoExpiry $((fullNumWithExpiry+1)) $bootnode # By default, last node is remoteDB
-    startFullNodeWithExpiry fullNumWithExpiry 1 $bootnode
+    startFullNodeNoExpiry fullNumNoExpiry 1 $bootnode # By default, last node is remoteDB
+    remote="http://127.0.0.1:$((8501+1))"
+    startFullNodeWithExpiry fullNumWithExpiry $((fullNumNoExpiry+1)) $bootnode $remote
     echo "Finish deploy"
     ;;
 stop)
