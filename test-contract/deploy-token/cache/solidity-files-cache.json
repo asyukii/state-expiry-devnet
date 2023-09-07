@@ -869,82 +869,7 @@
         "Context"
       ]
     },
-    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-BEP20/contracts/ABCToken.sol": {
-      "lastModificationDate": 1693387307533,
-      "contentHash": "4227ad6d14ac484b8bd9877f2ea06487",
-      "sourceName": "contracts/ABCToken.sol",
-      "solcConfig": {
-        "version": "0.6.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./IBEP20.sol",
-        "openzeppelin-solidity/contracts/GSN/Context.sol",
-        "openzeppelin-solidity/contracts/math/SafeMath.sol",
-        "openzeppelin-solidity/contracts/access/Ownable.sol"
-      ],
-      "versionPragmas": [
-        "0.6.4"
-      ],
-      "artifacts": [
-        "ABCToken"
-      ]
-    },
-    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-BEP20/contracts/IBEP20.sol": {
-      "lastModificationDate": 1693387307533,
-      "contentHash": "33202ed1b62a5af172b426bf10102d93",
-      "sourceName": "contracts/IBEP20.sol",
-      "solcConfig": {
-        "version": "0.6.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.6.4"
-      ],
-      "artifacts": [
-        "IBEP20"
-      ]
-    },
-    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-BEP20/node_modules/openzeppelin-solidity/contracts/access/Ownable.sol": {
+    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-token/node_modules/openzeppelin-solidity/contracts/access/Ownable.sol": {
       "lastModificationDate": 1693387315721,
       "contentHash": "6748815a5b45c4aeeda56819f41190e0",
       "sourceName": "openzeppelin-solidity/contracts/access/Ownable.sol",
@@ -981,42 +906,7 @@
         "Ownable"
       ]
     },
-    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-BEP20/node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol": {
-      "lastModificationDate": 1693387315727,
-      "contentHash": "e03e12206057e809eb76c5f681170c32",
-      "sourceName": "openzeppelin-solidity/contracts/math/SafeMath.sol",
-      "solcConfig": {
-        "version": "0.6.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.6.0 <0.8.0"
-      ],
-      "artifacts": [
-        "SafeMath"
-      ]
-    },
-    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-BEP20/node_modules/openzeppelin-solidity/contracts/GSN/Context.sol": {
+    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-token/node_modules/openzeppelin-solidity/contracts/GSN/Context.sol": {
       "lastModificationDate": 1693387315719,
       "contentHash": "a02aa4ae53018d92603a3ead2c365958",
       "sourceName": "openzeppelin-solidity/contracts/GSN/Context.sol",
@@ -1051,7 +941,42 @@
       ],
       "artifacts": []
     },
-    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-BEP20/node_modules/openzeppelin-solidity/contracts/utils/Context.sol": {
+    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-token/node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol": {
+      "lastModificationDate": 1693387315727,
+      "contentHash": "e03e12206057e809eb76c5f681170c32",
+      "sourceName": "openzeppelin-solidity/contracts/math/SafeMath.sol",
+      "solcConfig": {
+        "version": "0.6.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.6.0 <0.8.0"
+      ],
+      "artifacts": [
+        "SafeMath"
+      ]
+    },
+    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-token/node_modules/openzeppelin-solidity/contracts/utils/Context.sol": {
       "lastModificationDate": 1693387315765,
       "contentHash": "2adbd82f6d055a4751566d4671512b03",
       "sourceName": "openzeppelin-solidity/contracts/utils/Context.sol",
@@ -1084,6 +1009,227 @@
       ],
       "artifacts": [
         "Context"
+      ]
+    },
+    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-token/contracts/ERC20Token.sol": {
+      "lastModificationDate": 1693978504810,
+      "contentHash": "df754ab1253f684f34b82e6d55e861ba",
+      "sourceName": "contracts/ERC20Token.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC20Token"
+      ]
+    },
+    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-token/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+      "lastModificationDate": 1693978343053,
+      "contentHash": "5a20b2cad87ddb61c7a3a6af21289e28",
+      "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Ownable"
+      ]
+    },
+    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-token/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
+      "lastModificationDate": 1693978343038,
+      "contentHash": "3ae5166c6827a9cf1a7a462d1632b464",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC20.sol",
+        "./extensions/IERC20Metadata.sol",
+        "../../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC20"
+      ]
+    },
+    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-token/node_modules/@openzeppelin/contracts/utils/Context.sol": {
+      "lastModificationDate": 1693978343030,
+      "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
+      "sourceName": "@openzeppelin/contracts/utils/Context.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Context"
+      ]
+    },
+    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-token/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+      "lastModificationDate": 1693978343049,
+      "contentHash": "909ab67fc5c25033fe6cd364f8c056f9",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20Metadata"
+      ]
+    },
+    "/Users/weihan/Documents/Codes/state-expiry-devnet/test-contract/deploy-token/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1693978343048,
+      "contentHash": "df36f7051335cd1e748b1b6463b7fdd3",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20"
       ]
     }
   }

@@ -3,7 +3,7 @@ const fs = require('fs');
 
 async function main() {
   // Get the ABCToken contract instance
-  const ABCToken = await hre.ethers.getContractFactory("ABCToken");
+  const ABCToken = await hre.ethers.getContractFactory("ERC20Token");
 
   // Read from the JSON file and get the contract address
   const data = fs.readFileSync('../deployed_contracts.json');

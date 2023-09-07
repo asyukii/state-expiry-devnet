@@ -12,15 +12,15 @@ async function main() {
 
   let accountCount = 0;
   // deploy contract
-  const ABCToken = await hre.ethers.getContractFactory("ABCToken");
+  const ABCToken = await hre.ethers.getContractFactory("ERC20Token");
   const abcToken = await ABCToken.deploy();
   await abcToken.deployed();
-  console.log(`ABCToken deployed: ${abcToken.address}, tx: ${abcToken.deployTransaction.hash}`);
-  console.log(`owner balance: ${ethers.utils.formatEther(await abcToken.balanceOf(owner.address))} ABC`);
+  console.log(`ERC20Token deployed: ${abcToken.address}, tx: ${abcToken.deployTransaction.hash}`);
+  console.log(`owner balance: ${ethers.utils.formatEther(await abcToken.balanceOf(owner.address))} ERC20`);
 
   while (accountCount < 1_000_000) {
     if (accountCount % 1000 === 0) {
-      console.log(`owner balance: ${ethers.utils.formatEther(await abcToken.balanceOf(owner.address))} ABC`);
+      console.log(`owner balance: ${ethers.utils.formatEther(await abcToken.balanceOf(owner.address))} ERC20`);
     }
     try {
       // add account
@@ -38,7 +38,7 @@ async function main() {
   }
 
   await sleep(10000);
-  console.log(`owner balance: ${ethers.utils.formatEther(await abcToken.balanceOf(owner.address))} ABC`);
+  console.log(`owner balance: ${ethers.utils.formatEther(await abcToken.balanceOf(owner.address))} ERC20`);
 }
 
 function sleep(ms) {
