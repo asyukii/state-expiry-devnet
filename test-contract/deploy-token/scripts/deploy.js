@@ -8,12 +8,12 @@ const hre = require("hardhat");
 const fs = require("fs");
 
 async function main() {
-  const ABCToken = await hre.ethers.getContractFactory("ABCToken");
-  const abcToken = await ABCToken.deploy();
+  const ERC20Token = await hre.ethers.getContractFactory("ERC20Token");
+  const erc20Token = await ERC20Token.deploy();
 
-  await abcToken.deployed();
+  await erc20Token.deployed();
 
-  console.log(`ABCToken deployed to ${abcToken.address}`, "tx hash", abcToken.deployTransaction.hash);
+  console.log(`ERC20Token deployed to ${erc20Token.address}`, "tx hash", erc20Token.deployTransaction.hash);
 
   // Check if the JSON file exists
   jsonPath = "../deployed_contracts.json";
@@ -25,7 +25,7 @@ async function main() {
   }
 
   // Update the deployed address of ABCToken in the data object
-  data.ABCToken = abcToken.address;
+  data.ERC20Token = erc20Token.address;
 
   // Write the updated data object to the JSON file
   fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2));

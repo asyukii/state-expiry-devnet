@@ -5,6 +5,7 @@
     "hardhat": "^2.14.0"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^4.9.3",
     "openzeppelin-solidity": "^3.4.2"
   }
 }

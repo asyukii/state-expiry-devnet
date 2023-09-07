@@ -3,7 +3,7 @@ const fs = require("fs");
 
 async function main() {
   // Get the ABCToken contract instance
-  const ABCToken = await hre.ethers.getContractFactory("ABCToken");
+  const ABCToken = await hre.ethers.getContractFactory("ERC20Token");
 
     // Read from the JSON file and get the contract address
     const data = fs.readFileSync('../deployed_contracts.json');
@@ -16,9 +16,9 @@ async function main() {
 
   // Call the balanceOf function
   const balance1 = await contract.balanceOf(sender);
-  console.log(`Balance of ${sender}: ${ethers.utils.formatEther(balance1)} ABC`);
+  console.log(`Balance of ${sender}: ${ethers.utils.formatEther(balance1)} ERC20`);
   const balance2 = await contract.balanceOf(receiver);
-  console.log(`Balance of ${receiver}: ${ethers.utils.formatEther(balance2)} ABC`);
+  console.log(`Balance of ${receiver}: ${ethers.utils.formatEther(balance2)} ERC20`);
 }
 
 main()

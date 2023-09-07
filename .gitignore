@@ -1,3 +1,8 @@
 genesis/node_modules
 clusterNode
 test-contract/deploy-token/node_modules
+bin/geth
+genesis/genesis.json
+genesis/init_holders.js
+genesis/validators.conf
+genesis/validators.js
