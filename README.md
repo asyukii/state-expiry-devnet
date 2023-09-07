@@ -63,35 +63,29 @@ cd state-expiry-devnet
 
 All setup scripts are available in `state-expiry-devnet/scripts`. By default, it will create 3 nodes config, and start them.
 
-#### Deploy 3 full nodes with no state expiry feature
+#### Deploy 2 full nodes with state expiry, 1 normal full node 
 
 ```bash
 bash scripts/test_deploy_nodes.sh start
 ```
 
-#### Deploy 2 full nodes with state expiry, 1 normal full node 
-
-```bash
-bash scripts/deploy_nodes_expiry.sh start
-```
-
 #### Stop cluster nodes
 
 ```bash
-bash scripts/deploy_nodes_expiry.sh stop
+bash scripts/test_deploy_nodes.sh stop
 ```
 
-### Deploy BEP20 & Testing
+### Deploy ERC20 & Testing
 
-Then enter `state-expiry-devnet/test-contract/deploy-token` to run all BEP20 scripts.
+Then enter `state-expiry-devnet/test-contract/deploy-token` to run all ERC20 scripts.
 
-It mocks a fake BEP20 token to test contract slots expiry scenarios.
+It mocks a fake ERC20 token to test contract slots expiry scenarios.
 
 ```bash
 cd test-contract/deploy-token
 ```
 
-#### Deploy BEP20 Token Contract
+#### Deploy ERC20 Token Contract
 
 ```bash
 # install dependencies
@@ -100,10 +94,10 @@ npm install
 npx hardhat run scripts/deploy.js
 ```
 
-#### Transfer BEP20 Token & Read Balance
+#### Transfer ERC20 Token & Read Balance
 
 ```bash
-# This will transfer BEP20 Token from scripts/asset/test_account.json first account
+# This will transfer ERC20 Token from scripts/asset/test_account.json first account
 # This script only transfer once
 npx hardhat run scripts/transfer.js
 # read sender & receiver's balance
@@ -124,11 +118,24 @@ Then enter `state-expiry-devnet/test-script` to run all golang scripts.
 cd test-script
 ```
 
-#### BNB transfer Loop
+#### ETH transfer Loop
 
 ```bash
 # The script keeps sending transactions until ctrl-c
-go run test_bnb_transfer.go
+go run test_eth_transfer.go
+```
+
+#### ERC20 Transfer Loop
+```bash
+# The script keeps sending transactions until ctrl-c
+go run test_erc20_transfer.go
+```
+
+#### ERC20 Transfer Loop with expiry
+The following script will send transactions such that some of them accesses expired slots.
+```bash
+# The script keeps sending transactions until ctrl-c
+go run test_erc20_revive.go
 ```
 
 ### Useful RPC Commands
