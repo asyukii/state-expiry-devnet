@@ -10,6 +10,7 @@ function exit_previous() {
 	# stop client
 	ps -ef  | grep ${workspace}/bin/geth | awk '{print $2}' | xargs kill
 	ps -ef  | grep ${workspace}/bin/bootnode | awk '{print $2}' | xargs kill
+  sleep 30
 }
 
 function start_bootnode() {
@@ -92,6 +93,14 @@ function prepareGethEnv(){
     done
 }
 
+function loadGethEnv(){
+    num=$1
+    for((i=1;i<=$num;i++)); do
+        validatorAddr=("${validatorAddr[@]}" `cat ${workspace}/clusterNode/validator${i}Info|grep 'Public address of the key'|awk '{print $6}'` )
+        validatorSecretLoc=("${validatorSecretLoc[@]}" `cat ${workspace}/clusterNode/validator${i}Info|grep  'Path of the secret key file'|awk '{print $7}'`)
+    done
+}
+
 function generateGenesis(){
     rm ${workspace}/genesis/validators.conf
     num=$1
@@ -127,8 +136,8 @@ function startFullNodeWithExpiry() {
          --port "$((30305+$nodeNum))" --authrpc.port "$((8550+$nodeNum))" --password "${workspace}/clusterNode/password.txt" \
          --mine --miner.etherbase ${validatorAddr[$validatorIndex]} --rpc.allow-unprotected-txs --allow-insecure-unlock --light.serve 50 \
          --gcmode full --ws --datadir ${workspace}/clusterNode/node${nodeNum} \
-         --metrics --pprof --pprof.port "$((6060+$nodeNum))" --http.corsdomain "*" --rpc.txfeecap 0 \
-         --state-expiry --state-expiry.remote ${remote} > ${workspace}/clusterNode/node${nodeNum}/geth.log 2>&1 &
+         --metrics  --metrics.addr "0.0.0.0" --metrics.port "$((6060+$nodeNum))" --pprof --pprof.port "$((6070+$nodeNum))" --http.corsdomain "*" --rpc.txfeecap 0 \
+         --state-expiry --state-expiry.remote ${remote} > ${workspace}/clusterNode/node${nodeNum}/geth-$(date +"%Y%m%d_%H%M").log 2>&1 &
 
         echo "start validator $nodeNum as full node, enable state expiry feature"
         nodeNum=$(($nodeNum+1))
@@ -149,9 +158,55 @@ function startFullNodeNoExpiry() {
          --port "$((30305+$nodeNum))" --authrpc.port "$((8550+$nodeNum))" --password "${workspace}/clusterNode/password.txt" \
          --mine --miner.etherbase ${validatorAddr[$validatorIndex]} --rpc.allow-unprotected-txs --allow-insecure-unlock --light.serve 50 \
          --gcmode full --ws --datadir ${workspace}/clusterNode/node${nodeNum} --rpc.txfeecap 0 \
-         --metrics --pprof --pprof.port "$((6060+$nodeNum))" --http.corsdomain "*" > ${workspace}/clusterNode/node${nodeNum}/geth.log 2>&1 &
+         --metrics  --metrics.addr "0.0.0.0" --metrics.port "$((6060+$nodeNum))" --pprof --pprof.port "$((6070+$nodeNum))" --http.corsdomain "*" > ${workspace}/clusterNode/node${nodeNum}/geth-$(date +"%Y%m%d_%H%M").log 2>&1 &
 
         echo "start validator $nodeNum as full node"
+        nodeNum=$(($nodeNum+1))
+        sleep 1
+    done
+}
+
+function pruneFullNodeNoExpiry() {
+    num=$1
+    nodeNum=$2
+    for((i=1;i<=$num;i++)); do
+        validatorIndex=$(($nodeNum-1))
+        nohup ${workspace}/bin/geth snapshot prune-state --config ${workspace}/clusterNode/node${nodeNum}/config.toml \
+         --datadir ${workspace}/clusterNode/node${nodeNum} > ${workspace}/clusterNode/node${nodeNum}/geth-prune-$(date +"%Y%m%d_%H%M").log 2>&1 &
+
+        echo "start prune validator $nodeNum as full node"
+        nodeNum=$(($nodeNum+1))
+        sleep 1
+    done
+}
+
+function pruneFullNodeWithExpiry() {
+    num=$1
+    nodeNum=$2
+    for((i=1;i<=$num;i++)); do
+        validatorIndex=$(($nodeNum-1))
+        nohup ${workspace}/bin/geth snapshot prune-state --config ${workspace}/clusterNode/node${nodeNum}/config.toml \
+         --datadir ${workspace}/clusterNode/node${nodeNum} \
+         --state-expiry > ${workspace}/clusterNode/node${nodeNum}/geth-prune-$(date +"%Y%m%d_%H%M").log 2>&1 &
+
+        echo "start prune validator $nodeNum as full node, enable state expiry feature"
+        nodeNum=$(($nodeNum+1))
+
+        sleep 1
+    done
+}
+
+function storageProfile() {
+    num=$1
+    nodeNum=$2
+    for((i=1;i<=$num;i++)); do
+        validatorIndex=$(($nodeNum-1))
+        echo "start profile validator $nodeNum"
+        ${workspace}/bin/geth db inspect \
+         --datadir ${workspace}/clusterNode/node${nodeNum} > ${workspace}/clusterNode/node${nodeNum}/geth-storage-inspect-$(date +"%Y%m%d_%H%M").log 2>&1
+        geth-inspect db inspect-trie \
+         --datadir ${workspace}/clusterNode/node${nodeNum} latest 1000 > ${workspace}/clusterNode/node${nodeNum}/geth-trie-inspect-$(date +"%Y%m%d_%H%M").log 2>&1
+
         nodeNum=$(($nodeNum+1))
         sleep 1
     done
@@ -186,6 +241,61 @@ start)
     remote="http://127.0.0.1:$((8501+1))"
     startFullNodeWithExpiry fullNumWithExpiry $((fullNumNoExpiry+1)) $bootnode $remote
     echo "Finish deploy"
+    ;;
+restart)
+    exit_previous
+    fullNumWithExpiry=2
+    if [ ! -z $3 ] && [ "$3" -gt "0" ]; then
+      fullNumWithExpiry=$3
+    fi
+    fullNumNoExpiry=1
+    if [ ! -z $4 ] && [ "$4" -gt "0" ]; then
+      fullNumNoExpiry=$4
+    fi
+    validatorNum=fullNumWithExpiry+fullNumNoExpiry
+    echo "===== preparing ===="
+    loadGethEnv $validatorNum
+    bootnode=$(head -n 1 "${workspace}/clusterNode/bootnode.log")
+    echo "===== restarting client ===="
+    startFullNodeNoExpiry fullNumNoExpiry 1 $bootnode # By default, last node is remoteDB
+    remote="http://127.0.0.1:$((8501+1))"
+    startFullNodeWithExpiry fullNumWithExpiry $((fullNumNoExpiry+1)) $bootnode $remote
+    echo "Finish restart"
+    ;;
+prune)
+    exit_previous
+    fullNumWithExpiry=2
+    if [ ! -z $3 ] && [ "$3" -gt "0" ]; then
+      fullNumWithExpiry=$3
+    fi
+    fullNumNoExpiry=1
+    if [ ! -z $4 ] && [ "$4" -gt "0" ]; then
+      fullNumNoExpiry=$4
+    fi
+    validatorNum=fullNumWithExpiry+fullNumNoExpiry
+    echo "===== preparing ===="
+    loadGethEnv $validatorNum
+    echo "===== restarting client ===="
+    pruneFullNodeNoExpiry fullNumNoExpiry 1
+    pruneFullNodeWithExpiry fullNumWithExpiry $((fullNumNoExpiry+1))
+    echo "Finish prune"
+    ;;
+storage)
+    exit_previous
+    fullNumWithExpiry=2
+    if [ ! -z $3 ] && [ "$3" -gt "0" ]; then
+      fullNumWithExpiry=$3
+    fi
+    fullNumNoExpiry=1
+    if [ ! -z $4 ] && [ "$4" -gt "0" ]; then
+      fullNumNoExpiry=$4
+    fi
+    validatorNum=fullNumWithExpiry+fullNumNoExpiry
+    echo "===== preparing ===="
+    loadGethEnv $validatorNum
+    echo "===== restarting client ===="
+    storageProfile validatorNum 1
+    echo "Finish storage profile"
     ;;
 stop)
     echo "===== stopping client ===="
