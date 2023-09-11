@@ -21,9 +21,9 @@ import (
 	"time"
 )
 
-var accountNum = 3_000
+var EXPIRED_ACCOUNT_NUM = 3_000
 
-func createBatchAccounts(expirePerc, tps uint) []common.Address {
+func createBatchAccounts(accountNum int) []common.Address {
 
 	accounts := make([]common.Address, accountNum)
 
@@ -42,7 +42,7 @@ func createBatchAccounts(expirePerc, tps uint) []common.Address {
 func sendTransactionsToAccounts(client *ethclient.Client, senderPrvKey *ecdsa.PrivateKey, nonce uint64, gasPrice *big.Int, contract common.Address, abi abi.ABI, accounts []common.Address) (uint64, error) {
 
 	for _, receiverAddr := range accounts {
-		num, _ := new(big.Int).SetString("1000000000000000000", 10)
+		num, _ := new(big.Int).SetString("1000000000000000", 10)
 		input, err := abi.Pack("transfer", receiverAddr, num)
 		if err != nil {
 			fmt.Println("got err when Pack", err)
@@ -78,8 +78,9 @@ func sendTransactionsToAccounts(client *ethclient.Client, senderPrvKey *ecdsa.Pr
 			continue
 		}
 
-		fmt.Printf("txHash %v\n", signedTx.Hash())
+		// fmt.Printf("txHash %v\n", signedTx.Hash())
 		nonce++
+
 	}
 
 	fmt.Printf("sent %d transactions\n", len(accounts))
@@ -121,7 +122,7 @@ func main() {
 	utils.Fatal(err)
 
 	// Create accounts and send transactions to them
-	accounts := createBatchAccounts(expirePerc, tps)
+	accounts := createBatchAccounts(EXPIRED_ACCOUNT_NUM)
 	nonce, err = sendTransactionsToAccounts(client, senderPrvKey, nonce, gasPrice, contract, erc20, accounts) // for the first time, we send transactions to all accounts
 	if err != nil {
 		fmt.Println("got err when sendTransactionsToAccounts", err)
@@ -131,14 +132,18 @@ func main() {
 
 	expiredCount := tps * expirePerc / 100
 	unexpiredCount := tps - expiredCount
-	nonce, err = sendTransactionsToAccounts(client, senderPrvKey, nonce, gasPrice, contract, erc20, accounts[:unexpiredCount]) // for the second time, we send transactions to unexpired accounts
-	if err != nil {
-		fmt.Println("got err when sendTransactionsToAccounts", err)
-		return
-	}
-	time.Sleep(1000 * time.Millisecond)
 
-	startIndex := unexpiredCount
+	// Create 1 account to be used as the constant receiver
+	receiverAddr := common.BytesToAddress(common.FromHex("0xAb7b4C7BCDea64811d850F08e27BEC2F19F0b047"))
+	fmt.Printf("receiverAddr: %v\n", receiverAddr)
+
+	// Duplicate receiverAddr to create a slice of unexpired accounts
+	unexpiredAccs := make([]common.Address, unexpiredCount)
+	for i := 0; i < int(unexpiredCount); i++ {
+		unexpiredAccs[i] = receiverAddr
+	}
+
+	startIndex := uint(0)
 	endIndex := startIndex + expiredCount
 	t := time.NewTicker(1000 * time.Millisecond)
 	for {
@@ -148,12 +153,12 @@ func main() {
 			// If we have sent transactions to all accounts, we need to reset the index
 			// If we start from the beginning, the accounts should be expired again
 			if int(endIndex) > len(accounts)-int(unexpiredCount) {
-				startIndex = unexpiredCount
+				startIndex = 0
 				endIndex = startIndex + expiredCount
 			}
 
-			// Always send transactions to unexpired accounts
-			nonce, err = sendTransactionsToAccounts(client, senderPrvKey, nonce, gasPrice, contract, erc20, accounts[:unexpiredCount])
+			// Send transactions to unexpired accounts
+			nonce, err = sendTransactionsToAccounts(client, senderPrvKey, nonce, gasPrice, contract, erc20, unexpiredAccs)
 			if err != nil {
 				fmt.Println("got err when sendTransactionsToAccounts", err)
 				return
@@ -161,6 +166,10 @@ func main() {
 
 			// Send transactions to expired accounts periodically
 			nonce, err = sendTransactionsToAccounts(client, senderPrvKey, nonce, gasPrice, contract, erc20, accounts[startIndex:endIndex])
+			if err != nil {
+				fmt.Println("got err when sendTransactionsToAccounts", err)
+				return
+			}
 			startIndex = endIndex
 			endIndex = startIndex + expiredCount
 		}
