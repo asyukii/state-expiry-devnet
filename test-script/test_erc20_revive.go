@@ -92,10 +92,12 @@ func main() {
 
 	var tps uint
 	var expirePerc uint
+	var isRandom bool
 
 	// Prepare flag parameters
 	flag.UintVar(&tps, "tps", 50, "Transaction-Per-Second (TPS)")
 	flag.UintVar(&expirePerc, "expirePerc", 5, "Percentage of expired slot")
+	flag.BoolVar(&isRandom, "isRandom", false, "Whether to use random account or not")
 	flag.Parse()
 
 	// Get contract address and abi
@@ -158,6 +160,9 @@ func main() {
 			}
 
 			// Send transactions to unexpired accounts
+			if isRandom {
+				unexpiredAccs = createBatchAccounts(int(unexpiredCount))
+			}
 			nonce, err = sendTransactionsToAccounts(client, senderPrvKey, nonce, gasPrice, contract, erc20, unexpiredAccs)
 			if err != nil {
 				fmt.Println("got err when sendTransactionsToAccounts", err)
